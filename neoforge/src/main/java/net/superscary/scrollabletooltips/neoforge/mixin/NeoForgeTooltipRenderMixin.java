@@ -12,6 +12,7 @@ import net.superscary.scrollabletooltips.config.TooltipScrollConfig;
 import net.superscary.scrollabletooltips.tooltip.*;
 import org.joml.Vector2ic;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -26,6 +27,9 @@ import java.util.List;
  */
 @Mixin(GuiGraphics.class)
 public abstract class NeoForgeTooltipRenderMixin {
+    
+    @Shadow
+    private ItemStack tooltipStack;
     
     @Unique
     private TooltipScrollResult scrollabletooltips$currentResult = null;
@@ -85,7 +89,7 @@ public abstract class NeoForgeTooltipRenderMixin {
         int totalTooltipHeight = tooltipHeight + 8;
         int totalTooltipWidth = tooltipWidth + 8;
         
-        ItemStack hoveredStack = ItemStack.EMPTY;
+        ItemStack hoveredStack = this.tooltipStack != null ? this.tooltipStack : ItemStack.EMPTY;
 
         TooltipScrollService service = TooltipScrollManager.getService();
         service.onTooltipRenderStart(screen, hoveredStack, tooltipX, tooltipY, totalTooltipWidth, totalTooltipHeight);
